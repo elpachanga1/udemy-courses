@@ -4,6 +4,10 @@ docker run <imageName> <command>
 	docker run == docker create + docker start
 		docker create = crea imagen
 		docker start = ejecuta la imagen
+	// correr imagen con tag
+	docker run elpachanga1/simple-web
+	// correr imagen que comparte puertos
+	docker run -p 8080:8080 elpachanga1/simple-web
 
 // List images
 docker ps	// lista solo imagenes vivas
@@ -29,6 +33,10 @@ docker exec -it <ContainerId> <command>
 
 // Build image (Estando en la carpeta donde se encuentra el dockerfile)
 docker build .
+// Build si quieres que tu imagen tenga un tag para referenciarla despues
+	elpachanga1 = tu cuenta docker
+	redis-test = tagName
+docker build -t elpachanga1/redis-test:latest .
 
 // See all downloaded images
 docker images
