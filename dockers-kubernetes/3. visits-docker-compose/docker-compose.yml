@@ -1,0 +1,16 @@
+version: '3'
+services:
+  redis-server:
+    image: "redis:alpine"
+    container_name: "redis"
+    restart: always
+    ports:
+      - "6379:6379"
+  node-app:
+    restart: always # Cambiado a always para persistir entre paradas del contenedor
+    build: .
+    container_name: "node-app"
+    ports:
+      - "4001:8080" # Map port 4001 on host to port 8080 in container
+    depends_on:
+      - redis-server

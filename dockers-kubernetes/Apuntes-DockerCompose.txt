@@ -1,0 +1,14 @@
+// Comandos similes en docker compose
+docker run myImage == docker-compose up
+
+docker build .      ┐_  // ambas imagenes son iguales a 
+docker run myimage  ┘   == docker-compose up --build
+
+// correr todos los dockers en segundo plano
+docker-compose up -d
+
+// detener todos los dockers
+docker-compose down
+
+// ver status de todos los containers con docker-compose
+docker-compose ps
