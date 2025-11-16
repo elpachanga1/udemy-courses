@@ -40,3 +40,19 @@ docker build -t elpachanga1/redis-test:latest .
 
 // See all downloaded images
 docker images
+
+// Correr imagenes docker para cada ambiente
+// crear to Dockerfile.dev para dev, Dockerfile.test para test y asi con 
+// configuraciones diferentes
+docker build -f Dockerfile.dev .
+
+// Correr Docker volume
+docker run 
+	-it 					// persiste consola
+	-p 3000:3000 			// comparte puerto
+	-v /app/node_modules 	//	persiste la imagen de la node modules para 
+								que use la del contenedor
+	-v ${PWD}:/app 			// 	${PWD} = ruta de consola
+								/app WORKDIR del contenedor
+								esta seccion es para que se refresquen los cambios del codigo
+	frontend				// tag del contenedor
