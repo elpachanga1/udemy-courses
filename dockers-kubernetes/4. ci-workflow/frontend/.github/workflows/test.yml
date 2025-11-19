@@ -2,9 +2,9 @@ name: Test React App
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
   test:
@@ -15,7 +15,6 @@ jobs:
         uses: actions/checkout@v3
       
       - name: Build Docker image
-        working-directory: ./4. ci-workflow/frontend
         run: docker build -t elpachanga1/docker-react -f Dockerfile.dev .
       
       - name: Run tests
