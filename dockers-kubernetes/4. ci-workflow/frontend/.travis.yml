@@ -1,7 +1,21 @@
-sudo: required
+language: node_js
+node_js:
+  - '16'
 services:
   - docker
 before_install: 
-  - docker build -t docker-react -f Dockerfile.dev .
+  - docker build -t elpachanga1/docker-react -f Dockerfile.dev .
 script:
-  - docker run -e CI=true docker-react npm test
+  - docker run -e CI=true elpachanga1/docker-react npm run test -- --coverage
+deploy:
+  provider: elasticbeanstalk
+  region: "us-east-1"
+  app: "docker-frontend"
+  env: "Docker-frontend-env"
+  bucket_name: "elasticbeanstalk-us-east-1-691457164853"
+  bucket_path: "docker-frontend"
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
+  # http://docker-frontend-env.eba-2yutiemr.us-east-1.elasticbeanstalk.com/
