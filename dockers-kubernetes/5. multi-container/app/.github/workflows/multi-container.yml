@@ -1,0 +1,60 @@
+name: Multi-Container CI/CD
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Build test image
+        run: docker build -t docker-react -f ./client/Dockerfile.dev ./client
+      
+      - name: Run tests
+        run: docker run -e CI=true docker-react npm test -- --coverage
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      
+      - name: Build and push multi-client
+        run: |
+          docker build -t elpachanga1/multi-client:latest -t elpachanga1/multi-client:${{ github.sha }} ./client
+          docker push elpachanga1/multi-client:latest
+          docker push elpachanga1/multi-client:${{ github.sha }}
+      
+      - name: Build and push multi-nginx
+        run: |
+          docker build -t elpachanga1/multi-nginx:latest -t elpachanga1/multi-nginx:${{ github.sha }} ./nginx
+          docker push elpachanga1/multi-nginx:latest
+          docker push elpachanga1/multi-nginx:${{ github.sha }}
+      
+      - name: Build and push multi-server
+        run: |
+          docker build -t elpachanga1/multi-server:latest -t elpachanga1/multi-server:${{ github.sha }} ./server
+          docker push elpachanga1/multi-server:latest
+          docker push elpachanga1/multi-server:${{ github.sha }}
+      
+      - name: Build and push multi-worker
+        run: |
+          docker build -t elpachanga1/multi-worker:latest -t elpachanga1/multi-worker:${{ github.sha }} ./worker
+          docker push elpachanga1/multi-worker:latest
+          docker push elpachanga1/multi-worker:${{ github.sha }}

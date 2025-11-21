@@ -1,0 +1,55 @@
+{
+    "AWSEBDockerrunVersion": 2,
+    "containerDefinitions": [
+        {
+            "name": "client",
+            "image": "elpachanga1/multi-client:latest",
+            "hostname": "client",
+            "essential": false,
+            "memory": 128,
+            "portMappings": [
+                {
+                    "hostPort": 3000,
+                    "containerPort": 3000
+                }
+            ]
+        },
+        {
+            "name": "server",
+            "image": "elpachanga1/multi-server:latest",
+            "hostname": "api",
+            "essential": false,
+            "memory": 256,
+            "portMappings": [
+                {
+                    "hostPort": 5000,
+                    "containerPort": 5000
+                }
+            ]
+        },
+        {
+            "name": "worker",
+            "image": "elpachanga1/multi-worker:latest",
+            "hostname": "worker",
+            "essential": false,
+            "memory": 128
+        },
+        {
+            "name": "nginx",
+            "image": "elpachanga1/multi-nginx:latest",
+            "hostname": "nginx",
+            "essential": true,
+            "memory": 128,
+            "portMappings": [
+                {
+                    "hostPort": 80,
+                    "containerPort": 80
+                }
+            ],
+            "links": [
+                "client",
+                "server"
+            ]
+        }
+    ]
+}
