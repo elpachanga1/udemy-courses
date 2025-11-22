@@ -7,7 +7,7 @@ variable "aws_region" {
 variable "app_name" {
   description = "Name of the application"
   type        = string
-  default     = "docker-react-app"
+  default     = "multi-docker"
 }
 
 variable "environment" {
@@ -17,7 +17,7 @@ variable "environment" {
 }
 
 variable "solution_stack_name" {
-  description = "Elastic Beanstalk solution stack name"
+  description = "Elastic Beanstalk solution stack name for multi-container Docker"
   type        = string
   default     = "64bit Amazon Linux 2023 v4.8.0 running Docker"
 }
@@ -25,7 +25,7 @@ variable "solution_stack_name" {
 variable "instance_type" {
   description = "EC2 instance type"
   type        = string
-  default     = "t3.micro"
+  default     = "t3.small"
 }
 
 variable "min_instance_count" {
@@ -43,5 +43,19 @@ variable "max_instance_count" {
 variable "environment_type" {
   description = "Environment type (LoadBalanced or SingleInstance)"
   type        = string
-  default     = "LoadBalanced"
+  default     = "SingleInstance"
+}
+
+variable "db_username" {
+  description = "PostgreSQL master username"
+  type        = string
+  default     = "postgres"
+  sensitive   = true
+}
+
+variable "db_password" {
+  description = "PostgreSQL master password"
+  type        = string
+  default     = "postgrespassword"
+  sensitive   = true
 }

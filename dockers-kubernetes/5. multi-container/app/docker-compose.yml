@@ -1,65 +1,31 @@
 version: "3"
 services:
-  postgres:
-    image: postgres:latest
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres_password
-      POSTGRES_DB: postgres
-    # ports:
-    #   - "5432:5432"
-  redis:
-    image: redis:latest
-    # ports:
-    #   - "6379:6379"
-  nginx:
-    restart: always
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile.dev
-    ports:
-      - "3050:80"
-    depends_on:
-      - client
-      - api
   client:
-    build:
-      context: ./client
-      dockerfile: Dockerfile.dev
-    # ports:
-    #   - "3000:3000"
-    volumes:
-      - /app/node_modules
-      - ./client:/app
+    image: "elpachanga1/multi-client"
+    mem_limit: 128m
+    hostname: client
+  server:
+    image: "elpachanga1/multi-server"
+    mem_limit: 128m
+    hostname: api
     environment:
-      - CHOKIDAR_USEPOLLING=true
-      - WDS_SOCKET_PORT=0
-  api:
-    build:
-      context: ./server
-      dockerfile: Dockerfile.dev
-    # ports:
-    #   - "5000:5000"
-    volumes:
-      - /app/node_modules
-      - ./server:/app
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - PGUSER=postgres
-      - PGHOST=postgres
-      - PGPASSWORD=postgres_password
-      - PGDATABASE=postgres
-      - PGPORT=5432
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
+      - PGUSER=$PGUSER
+      - PGHOST=$PGHOST
+      - PGDATABASE=$PGDATABASE
+      - PGPASSWORD=$PGPASSWORD
+      - PGPORT=$PGPORT
   worker:
-    build:
-      context: ./worker
-      dockerfile: Dockerfile.dev
-    volumes:
-      - /app/node_modules
-      - ./worker:/app
+    image: "elpachanga1/multi-worker"
+    mem_limit: 128m
+    hostname: worker
     environment:
-      - CHOKIDAR_USEPOLLING=true
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
+  nginx:
+    image: "elpachanga1/multi-nginx"
+    mem_limit: 128m
+    hostname: nginx
+    ports:
+      - "80:80"

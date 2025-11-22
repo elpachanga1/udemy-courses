@@ -37,24 +37,43 @@ jobs:
       
       - name: Build and push multi-client
         run: |
-          docker build -t elpachanga1/multi-client:latest -t elpachanga1/multi-client:${{ github.sha }} ./client
-          docker push elpachanga1/multi-client:latest
-          docker push elpachanga1/multi-client:${{ github.sha }}
+          docker build -t elpachanga1/multi-client ./client
+          docker push elpachanga1/multi-client
       
       - name: Build and push multi-nginx
         run: |
-          docker build -t elpachanga1/multi-nginx:latest -t elpachanga1/multi-nginx:${{ github.sha }} ./nginx
-          docker push elpachanga1/multi-nginx:latest
-          docker push elpachanga1/multi-nginx:${{ github.sha }}
+          docker build -t elpachanga1/multi-nginx ./nginx
+          docker push elpachanga1/multi-nginx
       
       - name: Build and push multi-server
         run: |
-          docker build -t elpachanga1/multi-server:latest -t elpachanga1/multi-server:${{ github.sha }} ./server
-          docker push elpachanga1/multi-server:latest
-          docker push elpachanga1/multi-server:${{ github.sha }}
+          docker build -t elpachanga1/multi-server ./server
+          docker push elpachanga1/multi-server
       
       - name: Build and push multi-worker
         run: |
-          docker build -t elpachanga1/multi-worker:latest -t elpachanga1/multi-worker:${{ github.sha }} ./worker
-          docker push elpachanga1/multi-worker:latest
-          docker push elpachanga1/multi-worker:${{ github.sha }}
+          docker build -t elpachanga1/multi-worker ./worker
+          docker push elpachanga1/multi-worker
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Generate deployment package
+        run: zip -r deploy.zip Dockerrun.aws.json
+      
+      - name: Deploy to Elastic Beanstalk
+        uses: einaregilsson/beanstalk-deploy@v21
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
+          application_name: multi-docker
+          environment_name: MultiDocker-env
+          region: us-east-1
+          version_label: ${{ github.sha }}
+          deployment_package: deploy.zip

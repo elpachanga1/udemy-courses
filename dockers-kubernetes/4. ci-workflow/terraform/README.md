@@ -102,7 +102,7 @@ terraform destroy
 | `aws_region` | Región de AWS | `us-east-1` |
 | `app_name` | Nombre de la aplicación | `docker-react-app` |
 | `environment` | Nombre del ambiente | `production` |
-| `solution_stack_name` | Stack de Elastic Beanstalk | `64bit Amazon Linux 2023 v4.3.3 running Docker` |
+| `solution_stack_name` | Stack de Elastic Beanstalk | `64bit Amazon Linux 2023 v4.8.0 running Docker` |
 | `instance_type` | Tipo de instancia EC2 | `t3.micro` |
 | `min_instance_count` | Mínimo de instancias | `1` |
 | `max_instance_count` | Máximo de instancias | `4` |
