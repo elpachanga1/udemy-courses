@@ -200,11 +200,61 @@ resource "aws_elastic_beanstalk_application" "app" {
   description = "Multi-container Docker application with React, Express, Redis, and PostgreSQL"
 }
 
+# S3 Bucket for storing application versions
+resource "aws_s3_bucket" "app_versions" {
+  bucket = "${var.app_name}-versions-${data.aws_caller_identity.current.account_id}"
+
+  tags = {
+    Name      = "${var.app_name}-versions"
+    ManagedBy = "Terraform"
+  }
+}
+
+resource "aws_s3_bucket_public_access_block" "app_versions" {
+  bucket = aws_s3_bucket.app_versions.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+# Upload docker-compose.yml to S3
+resource "aws_s3_object" "dockerrun" {
+  bucket = aws_s3_bucket.app_versions.id
+  key    = "docker-compose-${var.app_version}.yml"
+  source = "../app/docker-compose.yml"
+  etag   = filemd5("../app/docker-compose.yml")
+
+  tags = {
+    Name      = "docker-compose-${var.app_version}"
+    ManagedBy = "Terraform"
+  }
+}
+
+# Create application version
+resource "aws_elastic_beanstalk_application_version" "app_version" {
+  name        = var.app_version
+  application = aws_elastic_beanstalk_application.app.name
+  description = "Application version ${var.app_version}"
+  bucket      = aws_s3_bucket.app_versions.id
+  key         = aws_s3_object.dockerrun.id
+
+  tags = {
+    Name      = "${var.app_name}-${var.app_version}"
+    ManagedBy = "Terraform"
+  }
+}
+
+# Get current AWS account ID
+data "aws_caller_identity" "current" {}
+
 # Elastic Beanstalk Environment
 resource "aws_elastic_beanstalk_environment" "app_env" {
   name                = "${var.app_name}-env"
   application         = aws_elastic_beanstalk_application.app.name
   solution_stack_name = var.solution_stack_name
+  version_label       = aws_elastic_beanstalk_application_version.app_version.name
 
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
