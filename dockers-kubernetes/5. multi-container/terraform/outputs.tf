@@ -42,8 +42,3 @@ output "security_group_id" {
   description = "Security group ID for multi-docker"
   value       = aws_security_group.multi_docker.id
 }
-
-output "s3_bucket_name" {
-  description = "S3 bucket name for Elastic Beanstalk deployments"
-  value       = "elasticbeanstalk-${var.aws_region}-${data.aws_caller_identity.current.account_id}"
-}
