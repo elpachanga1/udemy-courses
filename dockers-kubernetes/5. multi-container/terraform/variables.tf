@@ -22,12 +22,6 @@ variable "solution_stack_name" {
   default     = "64bit Amazon Linux 2023 v4.8.0 running Docker"
 }
 
-variable "app_version" {
-  description = "Application version label"
-  type        = string
-  default     = "v1"
-}
-
 variable "instance_type" {
   description = "EC2 instance type"
   type        = string
