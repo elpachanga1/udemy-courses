@@ -17,3 +17,8 @@ kubectl delete deployment client-deployment
 
 // crear un secret
 kubectl create secret generic pgpassword --from-literal PGPASSWORD=postgres
+
+// como habilitar Kubernetes Dashboard via port forward
+kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443
+// si te pide un bearer token asi se genera
+kubectl -n kubernetes-dashboard create token admin-user
