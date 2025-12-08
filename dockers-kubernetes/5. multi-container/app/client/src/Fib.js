@@ -13,7 +13,7 @@ function Fib() {
 
   const fetchIndexes = async () => {
     const response = await axios.get('/api/values/all');
-    setSeenIndexes(response.data);
+    setSeenIndexes(Array.isArray(response.data) ? response.data : []);
   };
 
   useEffect(() => {

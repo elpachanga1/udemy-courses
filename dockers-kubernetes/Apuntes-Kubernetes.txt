@@ -1,0 +1,12 @@
+// Aplicar un configfile
+kubectl apply -f client-pod.yaml
+
+// Obtener objetos de Kubernetes
+// podes cambiar pods por service, job, etc segun el objeto que quieras
+kubectl get pods
+
+// describir objeto
+kubectl describe pod client-deployment-678c966f45-67z5j
+
+// eliminar un objeto
+kubectl delete -f client-deployment-678c966f45-67z5j
