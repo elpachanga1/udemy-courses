@@ -1,5 +1,8 @@
 // Aplicar un configfile
 kubectl apply -f client-pod.yaml
+// si quisiera aplicar todos los archivos de una carpeta
+// siendo k8s el nombre de la carpeta
+kubectl apply -f k8s
 
 // Obtener objetos de Kubernetes
 // podes cambiar pods por service, job, etc segun el objeto que quieras
@@ -10,3 +13,7 @@ kubectl describe pod client-deployment-678c966f45-67z5j
 
 // eliminar un objeto
 kubectl delete -f client-deployment-678c966f45-67z5j
+kubectl delete deployment client-deployment
+
+// crear un secret
+kubectl create secret generic pgpassword --from-literal PGPASSWORD=postgres
