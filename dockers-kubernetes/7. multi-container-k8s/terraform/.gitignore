@@ -1,0 +1,38 @@
+# Ignorar archivos de Terraform
+.terraform/
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup
+*.tfstate
+*.tfstate.*
+
+# Ignorar archivos de variables con datos sensibles
+terraform.tfvars
+*.auto.tfvars
+
+# Ignorar archivos de override
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Ignorar archivos de crash log
+crash.log
+crash.*.log
+
+# Ignorar archivos de CLI configuration
+.terraformrc
+terraform.rc
+
+# Ignorar archivos de plan
+*.tfplan
+
+# Ignorar archivos de IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# GCP key files
+multik8s-480817-178af3bdc5fd.json

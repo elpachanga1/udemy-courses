@@ -1,0 +1,79 @@
+name: Test GCP Authentication
+
+on:
+  workflow_dispatch:  # Allows manual trigger from GitHub UI
+
+jobs:
+  test-auth:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Verify authentication
+        run: |
+          echo "===== Current gcloud auth list ====="
+          gcloud auth list
+          echo ""
+          echo "===== Current gcloud config ====="
+          gcloud config list
+          echo ""
+          echo "===== Available projects ====="
+          gcloud projects list
+          echo ""
+
+      - name: Configure project
+        run: |
+          gcloud config set project multik8s-480817
+          gcloud config set compute/zone us-central1
+
+      - name: List GKE clusters
+        run: |
+          echo "===== Listing GKE clusters ====="
+          gcloud container clusters list --project=multik8s-480817
+          echo ""
+
+      - name: Test kubectl access
+        run: |
+          echo "===== Getting cluster credentials ====="
+          gcloud container clusters get-credentials multi-container-cluster --zone us-central1 --project multik8s-480817
+          echo ""
+          echo "===== Testing kubectl ====="
+          kubectl cluster-info
+          kubectl get nodes
+          kubectl get namespaces
+
+      - name: Test Docker Hub auth
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Verify Docker Hub login
+        run: |
+          echo "===== Docker Hub login successful ====="
+          echo "Username: ${{ secrets.DOCKER_USERNAME }}"
+          echo "Docker info:"
+          docker info | grep Username || echo "Login verified"
+
+      - name: Summary
+        run: |
+          echo ""
+          echo "========================================"
+          echo "  ✅ All authentication tests passed!   "
+          echo "========================================"
+          echo ""
+          echo "Your secrets are configured correctly:"
+          echo "  ✅ GCP_SERVICE_ACCOUNT_KEY - Valid"
+          echo "  ✅ DOCKER_USERNAME - Valid"
+          echo "  ✅ DOCKER_PASSWORD - Valid"
+          echo ""
+          echo "You can now run the main deployment workflow!"

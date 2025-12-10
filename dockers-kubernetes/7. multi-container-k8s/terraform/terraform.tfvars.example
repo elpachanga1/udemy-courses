@@ -1,0 +1,61 @@
+# GCP Project Configuration
+project_id = "your-gcp-project-id"
+region     = "us-central1"
+
+# Cluster Configuration
+cluster_name = "multi-container-cluster"
+
+# Network Configuration (use default or specify custom VPC)
+network    = "default"
+subnetwork = "default"
+
+# Optional: Secondary IP ranges (leave empty if using default network)
+pods_range_name     = ""
+services_range_name = ""
+
+# Node Pool Configuration
+node_count     = 1
+min_node_count = 1
+max_node_count = 3
+machine_type   = "e2-medium"
+disk_size_gb   = 50
+disk_type      = "pd-standard"
+
+# Use preemptible nodes to save costs (not recommended for production)
+preemptible = false
+
+# Optional: Service account for nodes (leave empty to use default)
+service_account = ""
+
+# Node labels and tags
+node_labels = {
+  environment = "production"
+  app         = "multi-container"
+}
+
+node_tags = ["gke-node", "multi-container"]
+
+# Security Configuration
+authorized_networks = [
+  {
+    cidr_block   = "0.0.0.0/0"
+    display_name = "All networks"
+  }
+  # Add more specific CIDR blocks for better security:
+  # {
+  #   cidr_block   = "10.0.0.0/8"
+  #   display_name = "Private network"
+  # }
+]
+
+# Maintenance window (03:00 AM UTC by default)
+maintenance_start_time = "03:00"
+
+# Network policy (set to true if you need network policies)
+network_policy_enabled = false
+
+# Release channel (RAPID, REGULAR, or STABLE)
+release_channel = "REGULAR"
+
+# Path to GCP service account credentials file (optional if using gcloud auth)
+credentials_file = "C:\\ruta\\a\\tu\\service-account-key.json"

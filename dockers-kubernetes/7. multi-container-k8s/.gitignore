@@ -1,0 +1,12 @@
+# GCP Credentials - NEVER commit these files
+multik8s-480817-178af3bdc5fd.json
+client-secret.json
+client-secret.json.enc
+*service-account*.json
+
+# General credentials patterns
+*.pem
+*.key
+*.p12
+.env.local
+.env.*.local
