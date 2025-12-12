@@ -1,0 +1,63 @@
+apiVersion: skaffold/v4beta6
+kind: Config
+metadata:
+  name: kubernetes-multicontainer
+build:
+  local:
+    push: false
+    useBuildkit: true
+  tagPolicy:
+    sha256: {}
+  artifacts:
+  - image: elpachanga1/multi-client
+    context: app/client
+    docker:
+      dockerfile: Dockerfile.dev
+      buildArgs:
+        NODE_OPTIONS: "--openssl-legacy-provider"
+    sync:
+      manual:
+      - src: 'src/**/*.js'
+        dest: /app/src
+      - src: 'src/**/*.css'
+        dest: /app/src
+      - src: 'src/**/*.html'
+        dest: /app/src
+      - src: 'public/**/*'
+        dest: /app/public
+  - image: elpachanga1/multi-server
+    context: app/server
+    docker:
+      dockerfile: Dockerfile.dev
+    sync:
+      manual:
+      - src: '**/*.js'
+        dest: /app
+  - image: elpachanga1/multi-worker
+    context: app/worker
+    docker:
+      dockerfile: Dockerfile.dev
+    sync:
+      manual:
+      - src: '**/*.js'
+        dest: /app
+manifests:
+  rawYaml:
+  - k8s/client-deployment.yaml
+  - k8s/client-cluster-ip-service.yaml
+  - k8s/server-deployment.yaml
+  - k8s/server-cluster-ip-service.yaml
+  - k8s/worker-deployment.yaml
+  - k8s/redis-deployment.yaml
+  - k8s/redis-cluster-ip-service.yaml
+  - k8s/postgres-deployment.yaml
+  - k8s/postgres-cluster-ip-service.yaml
+  - k8s/database-persistent-volume-claim.yaml
+  - k8s/ingress-service.yaml
+deploy:
+  kubectl: {}
+portForward:
+- resourceType: service
+  resourceName: client-cluster-ip-service
+  port: 3000
+  localPort: 3050
