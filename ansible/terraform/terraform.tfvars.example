@@ -1,0 +1,11 @@
+# Copia este archivo a terraform.tfvars y configura tus valores
+
+resource_group_name = "rg-ansible-lab"
+location            = "East US"
+
+# Usuario y contraseña para las VMs
+admin_username = "azureuser"
+admin_password = "TuContraseñaSegura123!"
+
+# Tamaño de las VMs (Standard_B2s es económico para labs)
+vm_size = "Standard_B2s"
