@@ -1,0 +1,14 @@
+// Para este laboratorio uso una WSL Ubuntu
+// para entrar desde WSL a la carpeta dondee sta el proyecto uso estos comandos
+
+cd /mnt/c
+cd Users/FabianGuerreroMontañ/Documents/GitHub/udemy-courses/ansible
+
+// Si estuviera en una maquina RedHat/CentOS usaria estos comandos
+mkdir /etc/ansible/playbooks
+cd /etc/ansible/playbooks
+
+// comando para validar syntax yaml
+ansible-playbook --syntax-check first-playbook.yml
+
+// comando para correr tu playbook

@@ -24,19 +24,14 @@ output "vm_details" {
   }
 }
 
-output "control_node_public_ip" {
-  description = "IP pública del control node"
-  value       = azurerm_public_ip.vm_public_ip[0].ip_address
-}
-
 output "client_1_public_ip" {
   description = "IP pública del cliente 1"
-  value       = azurerm_public_ip.vm_public_ip[1].ip_address
+  value       = azurerm_public_ip.vm_public_ip[0].ip_address
 }
 
 output "client_2_public_ip" {
   description = "IP pública del cliente 2"
-  value       = azurerm_public_ip.vm_public_ip[2].ip_address
+  value       = azurerm_public_ip.vm_public_ip[1].ip_address
 }
 
 output "ssh_commands" {

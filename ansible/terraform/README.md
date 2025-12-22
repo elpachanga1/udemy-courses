@@ -1,19 +1,21 @@
 # Laboratorio de Ansible en Azure
 
-Este proyecto de Terraform crea un entorno de laboratorio para practicar Ansible en Azure con 3 máquinas virtuales Linux (Ubuntu 22.04).
-
-## Máquinas Virtuales
-
-- **control-node**: Nodo de control de Ansible
-- **client-1**: Cliente administrado 1
-- **client-2**: Cliente administrado 2
+Este proyecto de Terraform crea un entorno de laboratorio para practicar Ansible en Azure con 2 máquinas virtuales Linux (Ubuntu 22.04). El control node de Ansible se ejecuta desde tu WSL local.
 
 ## Arquitectura
 
+- **Control Node**: Tu WSL Ubuntu local (sin costo)
+- **client-1**: VM en Azure (cliente administrado 1)
+- **client-2**: VM en Azure (cliente administrado 2)
+
+## Infraestructura en Azure
+
+- 2 VMs Ubuntu 22.04 LTS en Azure
 - Todas las VMs están en la misma Virtual Network (10.0.0.0/16)
 - Todas las VMs están en la misma Subnet (10.0.1.0/24)
-- Cada VM tiene una IP pública para acceso SSH
-- Network Security Group configurado para permitir SSH y comunicación interna
+- Cada VM tiene una IP pública para acceso SSH desde tu WSL
+- Network Security Group configurado para permitir SSH desde Internet
+- El control node de Ansible corre en tu WSL local (sin necesidad de VM adicional)
 
 ## Requisitos Previos
 
@@ -86,36 +88,47 @@ terraform output
 
 ## Configuración Post-Despliegue para Ansible
 
-### En el control-node:
+### En tu WSL (Control Node Local):
 
-1. Conectarse al control-node:
-   ```bash
-   ssh azureuser@<IP_PUBLICA_CONTROL_NODE>
-   ```
-
-2. Instalar Ansible:
+1. Instalar Ansible en WSL:
    ```bash
    sudo apt update
-   sudo apt install -y ansible
+   sudo apt install -y ansible sshpass
    ```
 
-3. Crear un archivo de inventario de Ansible:
+2. Obtener las IPs públicas de las VMs:
    ```bash
-   mkdir ~/ansible
-   cat > ~/ansible/inventory << EOF
-   [managed_nodes]
-   client-1 ansible_host=10.0.1.X
-   client-2 ansible_host=10.0.1.Y
+   terraform output
+   ```
+
+3. Crear un directorio para tu proyecto Ansible:
+   ```bash
+   mkdir -p ~/ansible-lab
+   cd ~/ansible-lab
+   ```
+
+4. Crear un archivo de inventario de Ansible:
+   ```bash
+   cat > inventory.ini << EOF
+   [azure_vms]
+   client-1 ansible_host=<IP_PUBLICA_CLIENT_1>
+   client-2 ansible_host=<IP_PUBLICA_CLIENT_2>
    
-   [all:vars]
+   [azure_vms:vars]
    ansible_user=azureuser
    ansible_ssh_pass=TuContraseña
+   ansible_ssh_common_args='-o StrictHostKeyChecking=no'
    EOF
    ```
 
-4. Probar la conexión:
+5. Probar la conexión desde tu WSL:
    ```bash
-   ansible all -i ~/ansible/inventory -m ping
+   ansible all -i inventory.ini -m ping
+   ```
+
+6. Ejecutar un comando ad-hoc de prueba:
+   ```bash
+   ansible all -i inventory.ini -m shell -a "hostname"
    ```
 
 ## Notas de Seguridad

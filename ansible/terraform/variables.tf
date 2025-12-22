@@ -43,5 +43,5 @@ variable "admin_password" {
 variable "vm_names" {
   description = "Nombres de las máquinas virtuales"
   type        = list(string)
-  default     = ["control-node", "client-1", "client-2"]
+  default     = ["client-1", "client-2"]
 }
