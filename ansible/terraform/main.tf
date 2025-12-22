@@ -120,17 +120,12 @@ resource "azurerm_linux_virtual_machine" "ansible_vm" {
     azurerm_network_interface.vm_nic[count.index].id
   ]
 
-  # Configuración de autenticación
-  disable_password_authentication = var.ssh_public_key != "" ? true : false
-  admin_password                  = var.ssh_public_key == "" ? var.admin_password : null
+  # Usar solo autenticación SSH (más seguro)
+  disable_password_authentication = true
 
-  # SSH Key configuration
-  dynamic "admin_ssh_key" {
-    for_each = var.ssh_public_key != "" ? [1] : []
-    content {
-      username   = var.admin_username
-      public_key = var.ssh_public_key
-    }
+  admin_ssh_key {
+    username   = var.admin_username
+    public_key = var.ssh_public_key
   }
 
   os_disk {

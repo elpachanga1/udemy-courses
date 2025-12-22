@@ -34,12 +34,6 @@ variable "admin_username" {
   default     = "azureuser"
 }
 
-variable "admin_password" {
-  description = "Contraseña del usuario administrador"
-  type        = string
-  sensitive   = true
-}
-
 variable "vm_names" {
   description = "Nombres de las máquinas virtuales"
   type        = list(string)
@@ -47,7 +41,6 @@ variable "vm_names" {
 }
 
 variable "ssh_public_key" {
-  description = "Clave SSH pública para acceso a las VMs"
+  description = "Clave SSH pública para acceso a las VMs (requerida)"
   type        = string
-  default     = ""
 }

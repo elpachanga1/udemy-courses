@@ -1,0 +1,13 @@
+---
+- name: Copy file from local to remote
+  hosts: all
+  become: yes
+  tasks:
+    - name: Copying file
+      become: true
+      copy:
+        src: /mnt/c/users/FabianGuerreroMontañ/Documents/Github/udemy-courses/ansible/Apuntes.txt
+        dest: /tmp/Apuntes.txt
+        owner: azureuser
+        group: azureuser
+        mode: '0644'
