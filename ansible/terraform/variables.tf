@@ -45,3 +45,9 @@ variable "vm_names" {
   type        = list(string)
   default     = ["client-1", "client-2"]
 }
+
+variable "ssh_public_key" {
+  description = "Clave SSH pública para acceso a las VMs"
+  type        = string
+  default     = ""
+}

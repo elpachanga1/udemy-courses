@@ -3,9 +3,13 @@
 resource_group_name = "rg-ansible-lab"
 location            = "East US"
 
-# Usuario y contraseña para las VMs
+# Usuario para las VMs
 admin_username = "azureuser"
-admin_password = "TuContraseñaSegura123!"
+
+# Lee el contenido de tu clave pública: C:\Users\<TuUsuario>\.ssh\azure_ansible_key.pub
+# Get-Content "$env:USERPROFILE\.ssh\azure_ansible_key.pub"
+# y pégalo aquí entre las comillas:
+ssh_public_key = "ssh-rsa AAAAB3... tu-clave-publica-aqui"
 
 # Tamaño de las VMs (Standard_B2s es económico para labs)
 vm_size = "Standard_B2s"

@@ -12,3 +12,16 @@ cd /etc/ansible/playbooks
 ansible-playbook --syntax-check first-playbook.yml
 
 // comando para correr tu playbook
+ansible-playbook first-playbook.yml
+
+// comando para listar servidores
+ansible-inventory --list
+// listar servidores contenidos en inventory.ini
+ansible all -i inventory.ini -m ping
+
+// correr playbook con inventory.ini
+ansible-playbook -i inventory.ini playbooks/remote/check-remote-clients.yml
+
+// ansible ignora ansible.cfg que esta dentro de cualquier ruta windows porque no tiene los permisos suficientes, 
+// por eso se mueve toda la carpeta app a una ruta dentro de la WSL para poder ejecutar ansible.cfg sin inconvenientes
+// y poder configurar mas cosas dentro del archivo cfg

@@ -120,10 +120,18 @@ resource "azurerm_linux_virtual_machine" "ansible_vm" {
     azurerm_network_interface.vm_nic[count.index].id
   ]
 
-  # Deshabilitar autenticación por contraseña y usar SSH keys es más seguro
-  # pero para el lab permitimos contraseña para simplificar
-  disable_password_authentication = false
-  admin_password                  = var.admin_password
+  # Configuración de autenticación
+  disable_password_authentication = var.ssh_public_key != "" ? true : false
+  admin_password                  = var.ssh_public_key == "" ? var.admin_password : null
+
+  # SSH Key configuration
+  dynamic "admin_ssh_key" {
+    for_each = var.ssh_public_key != "" ? [1] : []
+    content {
+      username   = var.admin_username
+      public_key = var.ssh_public_key
+    }
+  }
 
   os_disk {
     name                 = "osdisk-${var.vm_names[count.index]}"
