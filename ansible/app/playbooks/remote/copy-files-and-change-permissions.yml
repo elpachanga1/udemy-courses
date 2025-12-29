@@ -1,5 +1,5 @@
 ---
-- name: Copy file from local to remote
+- name: Copy file from local to remote and change its permissions
   hosts: all
   become: yes
   tasks:
@@ -11,3 +11,10 @@
         owner: azureuser
         group: azureuser
         mode: '0644'
+    - name: Changing file permissions
+      file: 
+        path: /tmp/Apuntes.txt
+        owner: azureuser
+        group: azureuser
+        mode: '0755'
+        state: file

@@ -1,0 +1,27 @@
+---
+- name: Create and mount new storage
+  hosts: all
+
+  tasks:
+    - name: Create a new partition on /dev/sdb
+      parted:
+        name: files
+        label: gpt
+        device: /dev/sdb
+        number: 1
+        state: present
+        part_start: 1MiB
+        part_end: 1GiB
+    - name: Create xfs filesystem on the new partition
+      filesystem:
+        fstype: xfs
+        dev: /dev/sdb1
+    - name: Create mount point directory
+      file:
+        path: /data
+        state: directory
+    - name: mount the new partition
+      mount:
+        src: /dev/sdb1
+        fs_type: xfs
+        state: mounted

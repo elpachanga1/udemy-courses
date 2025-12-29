@@ -1,0 +1,23 @@
+---
+- name: Find a process and kill it on remote hosts
+  hosts: client-2
+  become: yes
+  vars:
+    process_name: "apache2"  # Replace with the actual process name you want to kill
+  tasks:
+    - name: Find the process ID (PID) of the process
+      shell: pgrep -f {{ process_name }}
+      register: process_id
+      ignore_errors: yes
+
+    - name: Kill the process if it is running
+      shell: kill -9 {{ item }}
+      loop: "{{ process_id.stdout_lines }}"
+      when: process_id.stdout_lines is defined and process_id.stdout_lines | length > 0
+      notify:
+        - Process killed
+
+  handlers:
+    - name: Process killed
+      debug:
+        msg: "The process '{{ process_name }}' has been killed."

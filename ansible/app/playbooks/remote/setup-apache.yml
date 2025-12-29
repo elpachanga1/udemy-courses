@@ -1,0 +1,26 @@
+---
+- name: Setup apache2 and open firewall port
+  hosts: all
+  become: yes
+  tasks:
+    - name: Install Apache
+      apt:
+        name: apache2
+        state: present
+        update_cache: yes
+    - name: Start Apache service
+      service:
+        name: apache2
+        state: started
+        enabled: yes
+
+    - name: Open HTTP port in the firewall
+      ufw:
+        rule: allow
+        port: '80'
+        proto: tcp
+        state: enabled
+
+    - name: Enable UFW
+      ufw:
+        state: enabled

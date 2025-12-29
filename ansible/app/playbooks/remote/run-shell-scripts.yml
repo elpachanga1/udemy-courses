@@ -1,0 +1,6 @@
+---
+- name: Playbook for shell script execution on remote hosts
+  hosts: client-1
+  tasks:
+    - name: Run shell script on remote
+      shell: cfile.sh

@@ -1,0 +1,17 @@
+---
+- name: Playbook for creating a new user on remote hosts
+  hosts: all
+  become: yes
+  tasks:
+    - name: Create user 'Fai'
+      ansible.builtin.user:
+        name: fai
+        home: /home/fai
+        comment: "New User Account"
+        shell: /bin/bash
+        create_home: yes
+        state: present
+    - name: Set password for user 'Fai'
+      ansible.builtin.user:
+        name: fai
+        password: "{{ 'YourSecurePassword' | password_hash('sha512') }}"
