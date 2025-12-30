@@ -30,3 +30,6 @@ ansible-playbook -i inventory.ini playbooks/remote/check-remote-clients.yml -K
 
 // seleccionar pasos de un playbook de ansible
 ansible-playbook yamlfile.yml --start-a-task 'TaskName'
+
+// correr un tag
+ansible-playbook apache-with-tags.yml -t apache_install

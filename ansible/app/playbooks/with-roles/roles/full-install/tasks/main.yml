@@ -1,0 +1,19 @@
+---
+- name: Install "apache2" package
+  apt:
+    name: apache2
+    state: present
+    update_cache: yes
+- name: Start and enable "apache2" service
+  service:
+    name: apache2
+    state: started
+    enabled: yes
+- name: Open HTTP port in the firewall
+  ufw:
+    rule: allow
+    port: '80'
+    proto: tcp
+- name: Enable UFW firewall
+  ufw:
+    state: enabled
