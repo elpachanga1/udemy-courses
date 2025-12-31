@@ -1,0 +1,39 @@
+
+// Ansible Vault
+// crear archivo cifrado
+ansible-vault create secrets.yml
+
+// cifrar archivo existente
+ansible-vault encrypt vars/production.yml
+
+// ver contenido cifrado
+ansible-vault view secrets.yml
+
+// editar archivo cifrado
+ansible-vault edit secrets.yml
+
+// descifrar archivo
+ansible-vault decrypt secrets.yml
+
+// cambiar contraseña
+ansible-vault rekey secrets.yml
+
+// ejecutar playbooks con Vault
+// Te pedirá la contraseña interactivamente
+ansible-playbook site.yml --ask-vault-pass
+
+// O usando un archivo de contraseña
+// IMPORTANTE: Agrega .vault_pass al .gitignore
+echo "mipassword" > .vault_pass
+ansible-playbook site.yml --vault-password-file .vault_pass
+
+// cifrar solo variables especificas
+ansible-vault encrypt_string 'passwordsecreto' --name 'db_password'
+
+// multiples contraseñas de vault
+# Crear con ID específico
+ansible-vault create --vault-id dev@prompt secrets_dev.yml
+ansible-vault create --vault-id prod@prompt secrets_prod.yml
+
+# Ejecutar con múltiples IDs
+ansible-playbook site.yml --vault-id dev@prompt --vault-id prod@prompt

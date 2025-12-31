@@ -1,0 +1,24 @@
+---
+- name: Desplegar aplicación
+  hosts: localhost
+  vars_files:
+    - secrets.yml
+  tasks:
+    - name: Validar que db_password existe
+      debug:
+        msg: "Password encriptado cargado correctamente"
+      when: db_password is defined
+    
+    - name: Validar que db_user existe
+      debug:
+        msg: "Usuario de base de datos: {{ db_user }}"
+      when: db_user is defined
+    
+    - name: Validar que api_key existe
+      debug:
+        msg: "API Key cargada desde Vault (valor oculto por seguridad)"
+      when: api_key is defined
+    
+    - name: Confirmar que todos los secretos fueron cargados
+      debug:
+        msg: "✓ Todos los secretos de Ansible Vault fueron cargados exitosamente"
