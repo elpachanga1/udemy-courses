@@ -1,0 +1,26 @@
+---
+- name: Create users with a loop
+  hosts: localhost
+  vars: 
+    groups: [ group1, group2, group3 ]
+    packages: [ git, curl, vim ]
+
+  tasks:
+    - name: Create multiple users
+      user:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - user1
+        - user2
+        - user3
+    - name: Create multiple groups
+      group:
+        name: "{{ item }}"
+        state: present
+      with_items: "{{ groups }}"
+    - name: Install multiple packages
+      apt:
+        name: "{{ packages }}"
+        state: present
+        update_cache: yes

@@ -1,0 +1,5 @@
+---
+# Default variables for webserver role
+apache_port: 80
+apache_document_root: /var/www/html
+apache_server_admin: admin@localhost

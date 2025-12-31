@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webserver - Ansible Managed</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; }
+        .info { 
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-left: 4px solid #2196F3;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Apache Web Server</h1>
+        <p>This server is managed by <strong>Ansible</strong></p>
+        
+        <div class="info">
+            <h3>Configuration Details:</h3>
+            <ul>
+                <li><strong>Port:</strong> {{ apache_port }}</li>
+                <li><strong>Document Root:</strong> {{ apache_document_root }}</li>
+                <li><strong>Server Admin:</strong> {{ apache_server_admin }}</li>
+                <li><strong>Hostname:</strong> {{ ansible_hostname }}</li>
+                <li><strong>OS:</strong> {{ ansible_distribution }} {{ ansible_distribution_version }}</li>
+            </ul>
+        </div>
+        
+        <p><em>Deployed with Ansible roles and handlers</em></p>
+    </div>
+</body>
+</html>

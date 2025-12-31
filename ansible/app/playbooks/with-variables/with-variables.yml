@@ -1,0 +1,12 @@
+---
+- name: Install packages with variables
+  hosts: localhost
+  vars:
+    package_name: "htop"
+
+  tasks:
+    - name: Install a package using a variable
+      apt:
+        name: "{{ package_name }}"
+        state: present
+        update_cache: yes

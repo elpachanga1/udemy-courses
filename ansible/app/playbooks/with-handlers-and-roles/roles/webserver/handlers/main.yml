@@ -1,0 +1,20 @@
+---
+# Handlers for webserver role
+# Handlers are triggered by 'notify' and run only once at the end of the play
+
+- name: Restart Apache
+  service:
+    name: apache2
+    state: restarted
+  listen: "Restart Apache"
+
+- name: Reload Apache
+  service:
+    name: apache2
+    state: reloaded
+  listen: "Reload Apache"
+
+- name: Validate Apache Config
+  command: apache2ctl configtest
+  changed_when: false
+  listen: "Validate Apache Config"

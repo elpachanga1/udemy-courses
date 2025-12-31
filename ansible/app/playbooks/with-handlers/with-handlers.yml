@@ -1,0 +1,27 @@
+---
+- name: Verify apache instalation with handlers
+  hosts: localhost
+
+  tasks:
+    - name: Ensure Apache is installed
+      apt:
+        name: apache2
+        state: present
+      
+    - name: Enable Apache modules
+      apache2_module:
+        name: rewrite
+        state: present
+      notify: Restart Apache Service
+      
+    - name: Ensure Apache is running
+      service:
+        name: apache2
+        state: started
+        enabled: yes
+
+  handlers:
+    - name: Restart Apache Service
+      service:
+        name: apache2
+        state: restarted

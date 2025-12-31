@@ -1,0 +1,20 @@
+---
+- name: Install Apache with conditions
+  hosts: localhost
+
+  tasks:
+    - name: Install Apache only on Debian-based systems
+      apt:
+        name: apache2
+        state: present
+      when: ansible_facts['os_family'] == "Debian"
+    - name: Install Apache only on RedHat-based systems
+      yum:
+        name: httpd
+        state: present
+      when: ansible_facts['os_family'] == "RedHat"
+    - name: Install Apache only on Ubuntu if not already installed
+      apt:
+        name: apache2
+        state: present
+      when: ansible_facts['os_family'] == "Ubuntu" and "'apache2' not in ansible_facts['packages']"

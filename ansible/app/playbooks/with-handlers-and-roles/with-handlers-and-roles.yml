@@ -1,0 +1,60 @@
+---
+# ============================================
+# Playbook combining Handlers and Roles
+# ============================================
+# This playbook demonstrates how to use roles with handlers
+# Roles organize tasks, handlers, templates, and variables
+
+- name: Setup webserver using roles and handlers
+  hosts: localhost
+  become: yes
+  
+  # You can override role default variables here
+  vars:
+    apache_port: 8080
+    apache_server_admin: webmaster@example.com
+  
+  # Pre-tasks run before roles
+  pre_tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+      changed_when: false
+
+  # Roles are imported here
+  roles:
+    - webserver
+  
+  # Post-tasks run after roles
+  post_tasks:
+    - name: Verify Apache is listening
+      wait_for:
+        port: "{{ apache_port }}"
+        state: started
+        timeout: 30
+      
+    - name: Display success message
+      debug:
+        msg: 
+          - "✅ Webserver deployed successfully!"
+          - "Access it at: http://localhost:{{ apache_port }}"
+          - "Configuration managed by Ansible role with handlers"
+
+# ============================================
+# How this works:
+# ============================================
+# 1. pre_tasks run first
+# 2. The 'webserver' role executes:
+#    - Installs Apache
+#    - Configures modules
+#    - Copies config files using templates
+#    - Each change notifies handlers
+# 3. Handlers run ONCE at the end (after all tasks)
+# 4. post_tasks run last
+#
+# To run this playbook:
+#   ansible-playbook with-handlers-and-roles.yml
+#
+# To override variables:
+#   ansible-playbook with-handlers-and-roles.yml -e "apache_port=9090"

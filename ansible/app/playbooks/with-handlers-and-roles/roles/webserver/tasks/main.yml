@@ -1,0 +1,42 @@
+---
+# Tasks for webserver role
+- name: Ensure Apache is installed
+  apt:
+    name: apache2
+    state: present
+    update_cache: yes
+  notify: Restart Apache
+
+- name: Enable Apache modules
+  apache2_module:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - rewrite
+    - headers
+  notify: Restart Apache
+
+- name: Copy Apache configuration template
+  template:
+    src: apache-config.conf.j2
+    dest: /etc/apache2/sites-available/000-default.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - Validate Apache Config
+    - Restart Apache
+
+- name: Copy index.html
+  template:
+    src: index.html.j2
+    dest: "{{ apache_document_root }}/index.html"
+    owner: www-data
+    group: www-data
+    mode: '0644'
+
+- name: Ensure Apache is running and enabled
+  service:
+    name: apache2
+    state: started
+    enabled: yes

@@ -1,0 +1,15 @@
+<VirtualHost *:{{ apache_port }}>
+    ServerAdmin {{ apache_server_admin }}
+    DocumentRoot {{ apache_document_root }}
+
+    <Directory {{ apache_document_root }}>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+    # Managed by Ansible
+</VirtualHost>
