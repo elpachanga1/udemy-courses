@@ -1,0 +1,25 @@
+name: Composite Action Example
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  test-composite-action:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Run composite action
+        id: composite
+        uses: ./.github/actions/setup-and-test
+        with:
+          node-version: '18'
+          package-name: 'express'
+      
+      - name: Display results
+        run: |
+          echo "Node version: ${{ steps.composite.outputs.node-version }}"
+          echo "Package installed: ${{ steps.composite.outputs.package-installed }}"

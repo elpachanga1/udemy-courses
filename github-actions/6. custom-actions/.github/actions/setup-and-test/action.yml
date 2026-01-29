@@ -1,0 +1,51 @@
+name: 'Setup and Test'
+description: 'A composite action that sets up Node.js and installs a package'
+inputs:
+  node-version:
+    description: 'Node.js version to use'
+    required: true
+    default: '18'
+  package-name:
+    description: 'NPM package to install'
+    required: true
+    default: 'lodash'
+outputs:
+  node-version:
+    description: 'The Node.js version that was installed'
+    value: ${{ steps.setup-node.outputs.node-version }}
+  package-installed:
+    description: 'The package that was installed'
+    value: ${{ steps.install-package.outputs.package }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Node.js
+      id: setup-node
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ inputs.node-version }}
+    
+    - name: Display Node version
+      shell: bash
+      run: |
+        echo "Node version: $(node --version)"
+        echo "NPM version: $(npm --version)"
+    
+    - name: Install package
+      id: install-package
+      shell: bash
+      run: |
+        echo "Installing ${{ inputs.package-name }}..."
+        npm install ${{ inputs.package-name }}
+        echo "package=${{ inputs.package-name }}" >> $GITHUB_OUTPUT
+    
+    - name: Verify installation
+      shell: bash
+      run: |
+        if npm list ${{ inputs.package-name }} > /dev/null 2>&1; then
+          echo "✅ Package ${{ inputs.package-name }} installed successfully!"
+        else
+          echo "❌ Package installation failed"
+          exit 1
+        fi

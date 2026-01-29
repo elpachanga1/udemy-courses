@@ -1,0 +1,49 @@
+name: Reusable Workflow
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        type: string
+      deploy-target:
+        description: 'Target for deployment'
+        required: false
+        type: string
+        default: 'default-server'
+    secrets:
+      deployment-token:
+        description: 'Token for deployment'
+        required: true
+    outputs:
+      deployment-status:
+        description: 'Status of the deployment'
+        value: ${{ jobs.deploy.outputs.status }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    outputs:
+      status: ${{ steps.deploy-step.outputs.status }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Display inputs
+        run: |
+          echo "🌍 Environment: ${{ inputs.environment }}"
+          echo "🎯 Deploy target: ${{ inputs.deploy-target }}"
+          echo "🔐 Token available: ${{ secrets.deployment-token != '' }}"
+      
+      - name: Simulate deployment
+        id: deploy-step
+        run: |
+          echo "Deploying to ${{ inputs.environment }}..."
+          sleep 2
+          echo "✅ Deployment successful!"
+          echo "status=success" >> $GITHUB_OUTPUT
+      
+      - name: Post-deployment check
+        run: |
+          echo "Running post-deployment checks..."
+          echo "All systems operational! 🚀"

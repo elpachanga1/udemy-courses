@@ -1,0 +1,22 @@
+name: JavaScript Action Example
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  test-javascript-action:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Run custom JavaScript action
+        id: greet
+        uses: ./.github/actions/hello-world-js
+        with:
+          who-to-greet: 'GitHub Actions'
+      
+      - name: Display output
+        run: echo "Response from action - ${{ steps.greet.outputs.time }}"

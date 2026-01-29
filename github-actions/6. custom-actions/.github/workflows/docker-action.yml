@@ -1,0 +1,22 @@
+name: Docker Action Example
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  test-docker-action:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Run custom Docker action
+        id: hello
+        uses: ./.github/actions/hello-world-docker
+        with:
+          who-to-greet: 'Docker Container'
+      
+      - name: Display output
+        run: echo "Time from Docker action - ${{ steps.hello.outputs.time }}"
