@@ -1,0 +1,57 @@
+global:
+  # Configuración SMTP para envío de emails
+  smtp_smarthost: 'smtp.gmail.com:587'
+  smtp_from: 'tu-email@gmail.com'
+  smtp_auth_username: 'tu-email@gmail.com'
+  smtp_auth_password: 'tu-contraseña-de-aplicacion'
+  smtp_require_tls: true
+
+route:
+  group_by: ['alertname']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 1h
+  receiver: 'email_receiver'
+  
+  # Rutas específicas para diferentes tipos de alertas
+  routes:
+    - receiver: 'slack_receiver'
+      matchers:
+        - severity="critical"
+    
+    - receiver: 'pager_duty_receiver'
+      matchers:
+        - severity="warning"
+
+receivers:
+  # Receiver 1: Para alertas generales
+  - name: 'email_receiver'
+    email_configs:
+      - to: 'alertas-general@ejemplo.com'
+        send_resolved: true
+  
+  # Receiver 2: Para alertas críticas
+  - name: 'slack_receiver'
+    slack_configs:
+      - api_url: 'YOUR_SLACK_WEBHOOK_URL_HERE'
+        channel: '#alertas-criticas'
+        send_resolved: true
+
+  # Receiver 3: Para alertas de baja prioridad
+  - name: 'pager_duty_receiver'
+    pagerduty_configs:
+      - service_key: 'tu-service-key-de-pagerduty'
+        send_resolved: true
+
+inhibit_rules:
+  # Regla 1: Las alertas críticas inhiben las de warning en la misma instancia
+  - source_matchers: [severity="critical"]
+    target_matchers: [severity="warning"]
+    equal: [alertname, dev, instance]
+  
+  # Regla 2: Ejemplo - Inhibir "Is Node Exporter UP" cuando hay HighCPUUsage
+  - source_matchers: 
+      - alertname="HighCPUUsage"
+    target_matchers: 
+      - alertname="Is Node Exporter UP"
+    equal: [instance]
