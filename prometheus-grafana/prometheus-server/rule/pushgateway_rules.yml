@@ -1,0 +1,35 @@
+groups:
+  # Reglas de alertas para Pushgateway
+  - name: PushgatewayAlerts
+    rules:
+      # Alerta si Pushgateway está caído
+      - alert: PushgatewayDown
+        expr: up{job="pushgateway"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Pushgateway está inaccesible"
+          description: "Pushgateway en {{ $labels.instance }} ha estado caído por más de 2 minutos."
+
+      # Alerta si hay métricas antiguas (posible fallo de batch jobs)
+      - alert: PushgatewayOldMetrics
+        expr: (time() - push_time_seconds{job="pushgateway"}) > 3600
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Métricas antiguas en Pushgateway"
+          description: "Las métricas del job {{ $labels.exported_job }} no se han actualizado en más de 1 hora."
+
+  # Reglas de grabación para Pushgateway
+  - name: PushgatewayRecordings
+    interval: 30s
+    rules:
+      # Contar cuántos batch jobs están enviando datos
+      - record: pushgateway:active_jobs:count
+        expr: count(push_time_seconds) by (instance)
+
+      # Tiempo desde la última actualización por job
+      - record: pushgateway:job_last_push:seconds
+        expr: time() - push_time_seconds

@@ -1,0 +1,64 @@
+# my global config
+global:
+  scrape_interval: 15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+  # scrape_timeout is set to the global default (10s).
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          # - alertmanager:9093
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+  - "rule/rules.yml"
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+  # AWS EC2 Service Discovery - Descubre automáticamente instancias EC2
+  - job_name: 'ec2-nodes'
+    ec2_sd_configs:
+      - region: us-east-1  # Cambia a tu región AWS (ej: us-west-2, eu-west-1)
+        port: 9100  # Puerto donde el node_exporter escucha en tus EC2
+        # Autenticación: usa IAM role (recomendado) o credenciales:
+        # access_key: YOUR_ACCESS_KEY
+        # secret_key: YOUR_SECRET_KEY
+        
+        # Filtros para descubrir solo ciertas instancias
+        filters:
+          - name: tag:Environment
+            values: [production]  # Solo instancias con tag Environment=production
+          - name: instance-state-name
+            values: [running]  # Solo instancias en estado running
+    
+    # Relabeling: usa metadata de EC2 como labels de Prometheus
+    relabel_configs:
+      # Usa el IP privado como target
+      - source_labels: [__meta_ec2_private_ip]
+        regex: (.*)
+        target_label: __address__
+        replacement: ${1}:9100
+      
+      # Agrega el instance ID como label
+      - source_labels: [__meta_ec2_instance_id]
+        target_label: instance_id
+      
+      # Agrega el availability zone
+      - source_labels: [__meta_ec2_availability_zone]
+        target_label: availability_zone
+      
+      # Usa tags de EC2 como labels
+      - source_labels: [__meta_ec2_tag_Name]
+        target_label: instance_name
+      
+      - source_labels: [__meta_ec2_tag_Environment]
+        target_label: environment
+      
+      # Agrega el tipo de instancia
+      - source_labels: [__meta_ec2_instance_type]
+        target_label: instance_type

@@ -1,0 +1,53 @@
+groups:
+  # Grupo 1: Alerting Rules - Definen alertas
+  - name: Alerts
+    rules:
+      # Alerta de uso de CPU alto (aplica a todos los servidores)
+      - alert: HighCPUUsage
+        expr: cpu_usage > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU Usage Detected"
+          description: "The CPU usage has been above 80% for more than 5 minutes."
+      
+      # Alerta SOLO para Node Exporter
+      - alert: NodeExporterDown
+        expr: up{job="app_server_node_exporter"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Node Exporter caído en {{ $labels.instance }}"
+          description: "Node Exporter {{ $labels.instance }} ha estado inaccesible por más de 1 minuto."
+      
+      # Alerta SOLO para Prometheus
+      - alert: PrometheusDown
+        expr: up{job="prometheus"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Prometheus está caído"
+          description: "Prometheus en {{ $labels.instance }} no responde."
+      
+      # Alerta SOLO para Pushgateway
+      - alert: PushgatewayDown
+        expr: up{job="push_gateway"} == 0
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Pushgateway caído"
+          description: "Pushgateway en {{ $labels.instance }} no está disponible."
+      
+      # Alerta para CUALQUIER servicio caído (sin filtro)
+      - alert: AnyServiceDown
+        expr: up == 0
+        for: 5m
+        labels:
+          severity: info
+        annotations:
+          summary: "Servicio {{ $labels.job }} caído"
+          description: "El servicio {{ $labels.job }} en {{ $labels.instance }} ha estado caído por 5 minutos."

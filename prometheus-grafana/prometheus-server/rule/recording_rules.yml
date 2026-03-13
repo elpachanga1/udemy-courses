@@ -1,0 +1,16 @@
+groups:
+  # Grupo 1: Record Rules - Pre-calculan métricas complejas
+  - name: RecordRules
+    interval: 30s  # Cada cuánto se evalúan estas reglas
+    rules:
+      # Ejemplo 1: Calcular el total de CPU usado por job
+      - record: job:cpu_usage:avg
+        expr: avg(rate(process_cpu_seconds_total[5m])) by (job)
+      
+      # Ejemplo 2: Calcular el promedio de requests por segundo
+      - record: instance:requests:rate5m
+        expr: rate(http_requests_total[5m])
+      
+      # Ejemplo 3: Uso de memoria en porcentaje
+      - record: instance:memory_usage:percentage
+        expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100
