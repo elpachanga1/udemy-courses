@@ -1,4 +1,8 @@
-# Ansible Azure Lab Project
+# 🔧 Ansible + Terraform — Azure Lab Project
+
+> **Language / Idioma:** 🇬🇧 **English** (current) | [🇪🇸 Español](../docs/es/ansible.md)
+>
+> ← [Back to main README](../README.md) · [Detailed EN docs](../docs/en/ansible.md) · [Docs ES](../docs/es/ansible.md)
 
 A complete infrastructure-as-code project for learning and practicing Ansible automation using Azure cloud resources. This project separates infrastructure provisioning (Terraform) from configuration management (Ansible) following best practices.
 

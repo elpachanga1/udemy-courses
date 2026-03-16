@@ -1,5 +1,9 @@
 # 📊 Stack de Monitoreo: Prometheus, Grafana, Loki y OpenTelemetry
 
+> **Language / Idioma:** [🇬🇧 English](../docs/en/prometheus-grafana.md) | 🇪🇸 **Español** (actual)
+>
+> ← [Volver al README principal](../README.md) · [Docs detallados ES](../docs/es/prometheus-grafana.md) · [Detailed EN docs](../docs/en/prometheus-grafana.md)
+
 ## 🎯 ¿Qué es cada herramienta?
 
 ### Prometheus
