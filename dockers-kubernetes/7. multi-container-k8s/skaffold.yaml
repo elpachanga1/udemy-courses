@@ -43,11 +43,12 @@ build:
         dest: /app
 manifests:
   rawYaml:
-  - k8s/client-deployment.yaml
-  - k8s/client-cluster-ip-service.yaml
-  - k8s/server-deployment.yaml
-  - k8s/server-cluster-ip-service.yaml
-  - k8s/worker-deployment.yaml
+  - k8s/client/*.yaml
+  - k8s/server/*.yaml
+  - k8s/worker/*.yaml
+  - k8s/postgres/*.yaml
+  - k8s/redis/*.yaml
+  - k8s/ingress/*.yaml
   - k8s/redis-deployment.yaml
   - k8s/redis-cluster-ip-service.yaml
   - k8s/postgres-deployment.yaml

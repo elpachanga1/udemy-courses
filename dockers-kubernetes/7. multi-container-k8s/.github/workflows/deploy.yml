@@ -83,7 +83,7 @@ jobs:
       - name: Deploy to GKE
         run: |
           SHA=$(git rev-parse HEAD)
-          kubectl apply -f k8s
+          kubectl apply -f k8s -R
           kubectl set image deployments/server-deployment server=${{ env.DOCKER_USERNAME }}/multi-server:${SHA}
           kubectl set image deployments/client-deployment client=${{ env.DOCKER_USERNAME }}/multi-client:${SHA}
           kubectl set image deployments/worker-deployment worker=${{ env.DOCKER_USERNAME }}/multi-worker:${SHA}
