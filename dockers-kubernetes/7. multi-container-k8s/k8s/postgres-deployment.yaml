@@ -12,6 +12,7 @@ spec:
       labels:
         component: postgres
     spec:
+      serviceAccountName: postgres-sa
       volumes:
       - name: postgres-storage
         persistentVolumeClaim:

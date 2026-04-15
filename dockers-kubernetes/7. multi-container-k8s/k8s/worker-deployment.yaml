@@ -12,6 +12,7 @@ spec:
       labels:
         component: worker
     spec:
+      serviceAccountName: worker-sa
       containers:
       - name: worker
         image: elpachanga1/multi-worker

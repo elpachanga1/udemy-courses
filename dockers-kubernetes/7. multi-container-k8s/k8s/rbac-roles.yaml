@@ -1,0 +1,57 @@
+# Roles con permisos mínimos por componente (principio de mínimo privilegio).
+#
+# server-role: permite leer únicamente el Secret "pgpassword" que necesita el servidor.
+#   Nota: Kubernetes inyecta los valores de secretKeyRef al arrancar el pod (via kubelet),
+#   pero este Role documenta explícitamente qué secreto tiene permitido leer esta identidad.
+#
+# worker-role: el worker sólo usa variables de entorno de Redis (valores literales),
+#   no requiere acceso a Secrets ni ConfigMaps de la API. Se define rol vacío para
+#   mantener su identidad registrada sin permisos adicionales.
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: server-role
+  namespace: default
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    resourceNames: ["pgpassword"]
+    verbs: ["get"]
+---
+# El worker sólo conecta a Redis usando variables de entorno hardcodeadas en el Deployment.
+# No necesita leer recursos de la API de Kubernetes.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: worker-role
+  namespace: default
+rules: []
+---
+# El cliente es React/Nginx, sin acceso a la API de Kubernetes.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: client-role
+  namespace: default
+rules: []
+---
+# Postgres gestiona su propio almacenamiento via PVC; sin acceso a la API de Kubernetes.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: postgres-role
+  namespace: default
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    resourceNames: ["pgpassword"]
+    verbs: ["get"]
+---
+# Redis no requiere ningún recurso de la API de Kubernetes.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: redis-role
+  namespace: default
+rules: []

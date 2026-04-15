@@ -12,6 +12,7 @@ spec:
       labels:
         component: redis
     spec:
+      serviceAccountName: redis-sa
       containers:
       - name: redis
         image: redis

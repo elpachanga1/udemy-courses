@@ -12,6 +12,7 @@ spec:
       labels:
         component: web
     spec:
+      serviceAccountName: client-sa
       containers:
       - name: client
         image: elpachanga1/multi-client

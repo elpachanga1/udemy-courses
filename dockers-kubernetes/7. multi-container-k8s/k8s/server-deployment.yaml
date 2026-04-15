@@ -12,6 +12,7 @@ spec:
       labels:
         component: server
     spec:
+      serviceAccountName: server-sa
       containers:
       - name: server
         image: elpachanga1/multi-server
